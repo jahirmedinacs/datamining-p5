@@ -161,7 +161,7 @@ def make_targets(proto_targets, samples=3, labels=None):
 	return target_container
 
 def heat_plot(data_values, function_target, *args):
-	temp = data_value.function_target()
+	temp = function_target(data_values)
 	sns.heatmap(temp)
 	return plt
 
@@ -178,6 +178,18 @@ def multy_hist(data_values, columns_names, target_names, plot_size=(10, 10), gri
 		for c in data_values.target.unique():
 			data_values.loc[ data_values.target == c, columns_names[col-1]].plot.hist(alpha=alpha_value)
 		
+	plt.legend(target_names)
+	plt.tight_layout()
+	return plt
+
+def multy_heat(data_values, columns_names, target_names, function_target, plot_size=(15, 15), grid_subplot=[3,2], *args):
+	plt.figure(figsize=plot_size)
+	for c_i, c in enumerate(data_values.target.unique()):
+		ax = plt.subplot(grid_subplot[0], grid_subplot[1], c_i + 1)
+		plt.title(target_names[c_i])
+		temp = function_target(data_values.loc[ data_values.target == c, columns_names[:-1]])
+		sns.heatmap(temp)
+
 	plt.legend(target_names)
 	plt.tight_layout()
 	return plt
